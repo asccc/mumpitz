@@ -44,7 +44,7 @@ The length of the collection.
 
 ## Instance methods
 
-#### [Symbol.iterator]()
+#### \[Symbol.iterator\]()
 
 Iterate over the collection using a for-of loop.
 
