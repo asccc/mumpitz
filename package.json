@@ -1,0 +1,32 @@
+{
+  "name": "mumpitz",
+  "version": "1.0.0",
+  "description": "Mumpitz Javascript library",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "asccc",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/asccc/mumpitz/issues"
+  },
+  "homepage": "https://github.com/asccc/mumpitz/#README",
+  "devDependencies": {
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-transform-inline-functions": "^1.0.4",
+    "babel-preset-env": "^1.6.1",
+    "grunt": "^1.0.1",
+    "grunt-contrib-compress": "^1.4.3",
+    "grunt-contrib-uglify": "^3.1.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-rollup": "^5.0.0",
+    "rollup-plugin-babel": "^2.7.1",
+    "rollup-plugin-uglify": "^2.0.1",
+    "rollup-watch": "^4.0.0"
+  },
+  "main": "Gruntfile.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asccc/mumpitz.git"
+  }
+}
