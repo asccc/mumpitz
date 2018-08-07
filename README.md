@@ -9,6 +9,13 @@ Everything should work as expected. But there are no tests ... so "expected" is 
 
 (This is not a serious project and intended as a joke)
 
+## License
+
+Copyright (c) 2018 asccc
+
+See [LICENSE-MIT.md]
+
+
 ## Files
 
 src/mumpitz.js ES2016
