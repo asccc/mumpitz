@@ -48,9 +48,15 @@ The length of the collection.
 
 Iterate over the collection using a for-of loop.
 
-### top()
+### get(index = null)
 
-Returns the first element in the collection. Throws an `Error` if the collection is empty.
+Returns the element at the given index.
+
+If `index` is null, the complete collection is returned (be aware, the collection is a NodeList and not an Array!).
+
+if `index` is less than 0, the offset starts from the end of the collection (e.g. offset = length + index).
+
+If the computed offset is out of bounds (e.g. still less than `0` or greater than or equal to `length`) an `Error` is thrown.
 
 ### is(selector)
 
