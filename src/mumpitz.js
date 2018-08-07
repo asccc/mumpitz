@@ -1,3 +1,5 @@
+/* global self */
+
 (function (global) {
   'use strict';
 
@@ -23,15 +25,12 @@
     /**
      * static initializer
      *
-     * @param  {String} sel
-     * @param  {Element|null} ctx
+     * @param  {String} selector
+     * @param  {Element|Document|null} context
      * @return {Mumpitz}
      */
-    static init (sel, ctx) {
-      if (!ctx) {
-        ctx = document;
-      }
-      return new Mumpitz(ctx.querySelectorAll(sel));
+    static init (selector, context = document) {
+      return new Mumpitz(context.querySelectorAll(selector));
     }
 
     /**
@@ -54,34 +53,47 @@
         return this.nodes[ITERATOR_TAG]();
       }
 
-      let i = 0;
-      let l = this.length;
-      let n = this.nodes;
+      const count = this.length;
+      const nodes = this.nodes;
+      let index = 0;
 
       return () => {
-        if (i + 1 >= l) {
+        if (index + 1 >= count) {
           return {
             value: undefined,
             done: true
           };
         }
         return {
-          value: n[i++],
+          value: nodes[index++],
           done: false
         };
       };
     }
 
     /**
-     * returns the first node
+     * returns a node at the given index (zero-based)
+     * or all nodes if no index was specified
      *
+     * @param {Number|null} index
      * @return {Element}
      */
-    top () {
-      if (!this.length) {
-        throw Error('top() called on empty collection');
+    get (index = null) {
+      if (index === null) {
+        return this.nodes;
       }
-      return this.nodes[0];
+      let offset = index;
+      let length = this.length;
+      if (length === 0) {
+        throw Error('get(...) called on empty collection');
+      }
+      if (offset < 0) {
+        offset += length;
+      }
+      if (offset < 0 || offset >= length) {
+        throw Error(`get(...): index out of bounds (offset: ${offset}, length: ${length})`);
+      }
+      return this.nodes[offset];
     }
 
     /**
@@ -90,8 +102,8 @@
      * @param  {String}  sel
      * @return {Boolean}
      */
-    is (sel) {
-      return this.top().matches(sel);
+    is (selector) {
+      return this.get(0).matches(selector);
     }
 
     /**
@@ -100,8 +112,8 @@
      * @param  {String} sel
      * @return {Mumpitz}
      */
-    find (sel) {
-      return Mumpitz.init(sel, this.top());
+    find (selector) {
+      return Mumpitz.init(selector, this.get(0));
     }
 
     /**
@@ -110,19 +122,19 @@
      * @param  {String}  cn
      * @return {Boolean}
      */
-    hasClass (cn) {
-      return this.top().classList.contains(cn);
+    hasClass (className) {
+      return this.get(0).classList.contains(className);
     }
 
     /**
      * removes a class-name
      *
-     * @param  {String} cn
+     * @param  {String} className
      * @return {Mumpitz}
      */
-    removeClass (cn) {
+    removeClass (className) {
       for (let e of this) {
-        e.classList.remove(cn);
+        e.classList.remove(className);
       }
       return this;
     }
@@ -130,11 +142,11 @@
     /**
      * adds a class-name
      *
-     * @param {String} cn
+     * @param {String} className
      */
-    addClass (cn) {
+    addClass (className) {
       for (let e of this) {
-        e.classList.add(cn);
+        e.classList.add(className);
       }
       return this;
     }
@@ -142,12 +154,12 @@
     /**
      * toggles a class
      *
-     * @param  {String} cn
+     * @param  {String} className
      * @return {Mumpitz}
      */
-    toggleClass (cn) {
+    toggleClass (className) {
       for (let e of this) {
-        e.classList.toggle(cn);
+        e.classList.toggle(className);
       }
       return this;
     }
@@ -158,7 +170,10 @@
   global.Mumpitz.$ = global.$;
   global.Mumpitz.fn = Mumpitz.prototype;
   global.Mumpitz.noConflict = function () {
-    global.$ = global.Mumpitz.$;
+    if (typeof global.Mumpitz.$ !== 'undefined') {
+      global.$ = global.Mumpitz.$;
+      delete global.Mumpitz.$;
+    }
     return Mumpitz.init;
   };
 

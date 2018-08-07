@@ -142,6 +142,8 @@
     };
   }();
 
+  /* global self */
+
   (function (global) {
     'use strict';
 
@@ -164,15 +166,14 @@
         /**
          * static initializer
          *
-         * @param  {String} sel
-         * @param  {Element|null} ctx
+         * @param  {String} selector
+         * @param  {Element|Document|null} context
          * @return {Mumpitz}
          */
-        value: function init(sel, ctx) {
-          if (!ctx) {
-            ctx = document;
-          }
-          return new Mumpitz(ctx.querySelectorAll(sel));
+        value: function init(selector) {
+          var context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
+
+          return new Mumpitz(context.querySelectorAll(selector));
         }
 
         /**
@@ -204,37 +205,52 @@
             return this.nodes[ITERATOR_TAG]();
           }
 
-          var i = 0;
-          var l = this.length;
-          var n = this.nodes;
+          var count = this.length;
+          var nodes = this.nodes;
+          var index = 0;
 
           return function () {
-            if (i + 1 >= l) {
+            if (index + 1 >= count) {
               return {
                 value: undefined,
                 done: true
               };
             }
             return {
-              value: n[i++],
+              value: nodes[index++],
               done: false
             };
           };
         }
 
         /**
-         * returns the first node
+         * returns a node at the given index (zero-based)
+         * or all nodes if no index was specified
          *
+         * @param {Number|null} index
          * @return {Element}
          */
 
       }, {
-        key: 'top',
-        value: function top() {
-          if (!this.length) {
-            throw Error('top() called on empty collection');
+        key: 'get',
+        value: function get$$1() {
+          var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+          if (index === null) {
+            return this.nodes;
           }
-          return this.nodes[0];
+          var offset = index;
+          var length = this.length;
+          if (length === 0) {
+            throw Error('get(...) called on empty collection');
+          }
+          if (offset < 0) {
+            offset += length;
+          }
+          if (offset < 0 || offset >= length) {
+            throw Error('get(...): index out of bounds (offset: ' + offset + ', length: ' + length + ')');
+          }
+          return this.nodes[offset];
         }
 
         /**
@@ -246,8 +262,8 @@
 
       }, {
         key: 'is',
-        value: function is(sel) {
-          return this.top().matches(sel);
+        value: function is(selector) {
+          return this.get(0).matches(selector);
         }
 
         /**
@@ -259,8 +275,8 @@
 
       }, {
         key: 'find',
-        value: function find(sel) {
-          return Mumpitz.init(sel, this.top());
+        value: function find(selector) {
+          return Mumpitz.init(selector, this.get(0));
         }
 
         /**
@@ -272,20 +288,20 @@
 
       }, {
         key: 'hasClass',
-        value: function hasClass(cn) {
-          return this.top().classList.contains(cn);
+        value: function hasClass(className) {
+          return this.get(0).classList.contains(className);
         }
 
         /**
          * removes a class-name
          *
-         * @param  {String} cn
+         * @param  {String} className
          * @return {Mumpitz}
          */
 
       }, {
         key: 'removeClass',
-        value: function removeClass(cn) {
+        value: function removeClass(className) {
           var _iteratorNormalCompletion = true;
           var _didIteratorError = false;
           var _iteratorError = undefined;
@@ -294,7 +310,7 @@
             for (var _iterator = this[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
               var e = _step.value;
 
-              e.classList.remove(cn);
+              e.classList.remove(className);
             }
           } catch (err) {
             _didIteratorError = true;
@@ -317,12 +333,12 @@
         /**
          * adds a class-name
          *
-         * @param {String} cn
+         * @param {String} className
          */
 
       }, {
         key: 'addClass',
-        value: function addClass(cn) {
+        value: function addClass(className) {
           var _iteratorNormalCompletion2 = true;
           var _didIteratorError2 = false;
           var _iteratorError2 = undefined;
@@ -331,7 +347,7 @@
             for (var _iterator2 = this[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
               var e = _step2.value;
 
-              e.classList.add(cn);
+              e.classList.add(className);
             }
           } catch (err) {
             _didIteratorError2 = true;
@@ -354,13 +370,13 @@
         /**
          * toggles a class
          *
-         * @param  {String} cn
+         * @param  {String} className
          * @return {Mumpitz}
          */
 
       }, {
         key: 'toggleClass',
-        value: function toggleClass(cn) {
+        value: function toggleClass(className) {
           var _iteratorNormalCompletion3 = true;
           var _didIteratorError3 = false;
           var _iteratorError3 = undefined;
@@ -369,7 +385,7 @@
             for (var _iterator3 = this[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
               var e = _step3.value;
 
-              e.classList.toggle(cn);
+              e.classList.toggle(className);
             }
           } catch (err) {
             _didIteratorError3 = true;
@@ -399,7 +415,10 @@
     global.Mumpitz.$ = global.$;
     global.Mumpitz.fn = Mumpitz.prototype;
     global.Mumpitz.noConflict = function () {
-      global.$ = global.Mumpitz.$;
+      if (typeof global.Mumpitz.$ !== 'undefined') {
+        global.$ = global.Mumpitz.$;
+        delete global.Mumpitz.$;
+      }
       return Mumpitz.init;
     };
 
