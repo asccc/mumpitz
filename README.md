@@ -67,15 +67,15 @@ If the computed offset is out of bounds (e.g. still less than `0` or greater tha
 
 ### is(selector)
 
-Returns true if the top() element matches the given selector.
+Returns true if the first element in the collection matches the given selector.
 
 ### find(selector)
 
-Searches for elements using the top() element as context. Equivalent to `Mumpitz(selector, this.top())`.
+Searches for elements using the top() element as context. Equivalent to `Mumpitz(selector, this.get(0))`.
 
 ### hasClass(className)
 
-Checks if the top() element has the given class-name.
+Checks if the first the collection element has the given class-name.
 
 ### removeClass(className)
 
