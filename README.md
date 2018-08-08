@@ -71,7 +71,7 @@ Returns true if the first element in the collection matches the given selector.
 
 ### find(selector)
 
-Searches for elements using the top() element as context. Equivalent to `Mumpitz(selector, this.get(0))`.
+Searches for elements using the first element in the collection as context. Equivalent to `Mumpitz(selector, this.get(0))`.
 
 ### hasClass(className)
 
