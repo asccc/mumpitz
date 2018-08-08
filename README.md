@@ -75,7 +75,7 @@ Searches for elements using the first element in the collection as context. Equi
 
 ### hasClass(className)
 
-Checks if the first the collection element has the given class-name.
+Checks if the first element in the collection has the given class-name.
 
 ### removeClass(className)
 
