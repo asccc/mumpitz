@@ -47,28 +47,19 @@
      * iterator
      *
      */
-    [ITERATOR_TAG] () {
+    * [ITERATOR_TAG] () {
       // newer engines support Symbol.iterator on NodeList's
       if (this.nodes[ITERATOR_TAG]) {
-        return this.nodes[ITERATOR_TAG]();
-      }
+        yield * this.nodes[ITERATOR_TAG]();
+      } else {
+        const count = this.length;
+        const nodes = this.nodes;
+        let index = 0;
 
-      const count = this.length;
-      const nodes = this.nodes;
-      let index = 0;
-
-      return () => {
-        if (index + 1 >= count) {
-          return {
-            value: undefined,
-            done: true
-          };
+        while (index < count) {
+          yield nodes[index++];
         }
-        return {
-          value: nodes[index++],
-          done: false
-        };
-      };
+      }
     }
 
     /**

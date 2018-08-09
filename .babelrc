@@ -7,5 +7,5 @@
       "modules": false
     }]
   ],
-  "plugins": ["external-helpers", "transform-inline-functions"]
+  "plugins": ["external-helpers"]
 } 
