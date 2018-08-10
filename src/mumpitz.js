@@ -68,17 +68,6 @@
           return {
             done: true
           };
-        },
-
-        return (value) {
-          return {
-            value,
-            done: true
-          };
-        },
-
-        throw (error) {
-          throw error;
         }
       };
     }
@@ -97,13 +86,18 @@
       let offset = index;
       let length = this.length;
       if (length === 0) {
-        throw Error('get(...) called on empty collection');
+        throw Error(
+          'get(...) called on empty collection'
+        );
       }
       if (offset < 0) {
         offset += length;
       }
       if (offset < 0 || offset >= length) {
-        throw Error(`get(...): index out of bounds (offset: ${offset}, length: ${length})`);
+        throw Error(
+          `get(...): index out of bounds ` +
+          `(offset: ${offset}, length: ${length})`
+        );
       }
       return this.nodes[offset];
     }
@@ -116,6 +110,37 @@
      */
     is (selector) {
       return this.get(0).matches(selector);
+    }
+
+    /**
+     * jquery compatible each()
+     *
+     * @param  {Function} func
+     * @return {Mumpitz}
+     */
+    each (func) {
+      // jQuery variant
+      const count = this.length;
+      const nodes = this.nodes;
+      for (let i = 0; i < count; ++i) {
+        func.call(nodes[i], i, nodes[i]);
+      }
+      return this;
+    }
+
+    /**
+     * standard forEach
+     *
+     * @param  {Function} func
+     * @param  {Object} context optional
+     */
+    forEach (func, context) {
+      const count = this.length;
+      const nodes = this.nodes;
+      const bound = context ? func.bind(context) : func;
+      for (let i = 0; i < count; ++i) {
+        bound(nodes[i], i, nodes);
+      }
     }
 
     /**
