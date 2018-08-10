@@ -36,22 +36,6 @@ module.exports = function () {
   };
 
   /* -------------------------------------------- */
-  /* concat */
-  config.concat = {
-    dist: {
-      options: {
-        separator: ';',
-        sourceMap: true
-      },
-      src: [
-        'node_modules/babel-polyfill/dist/polyfill.js',
-        'dist/mumpitz.js'
-      ],
-      dest: 'dist/mumpitz.js'
-    }
-  };
-
-  /* -------------------------------------------- */
   /* uglify */
 
   config.uglify = {
@@ -102,11 +86,10 @@ module.exports = function () {
   /* -------------------------------------------- */
 
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-rollup');
 
-  grunt.registerTask('dist', ['rollup', 'concat', 'uglify', 'compress']);
+  grunt.registerTask('dist', ['rollup', 'uglify', 'compress']);
   grunt.registerTask('default', ['dist']);
 };
