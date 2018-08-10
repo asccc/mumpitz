@@ -30,6 +30,9 @@
      * @return {Mumpitz}
      */
     static init (selector, context = document) {
+      if (selector instanceof Mumpitz) {
+        return selector;
+      }
       return new Mumpitz(context.querySelectorAll(selector));
     }
 

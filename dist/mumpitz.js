@@ -173,6 +173,9 @@
         value: function init(selector) {
           var context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
 
+          if (selector instanceof Mumpitz) {
+            return selector;
+          }
           return new Mumpitz(context.querySelectorAll(selector));
         }
 
@@ -220,15 +223,6 @@
               return {
                 done: true
               };
-            },
-            return: function _return(value) {
-              return {
-                value: value,
-                done: true
-              };
-            },
-            throw: function _throw(error) {
-              throw error;
             }
           };
         }
@@ -258,7 +252,7 @@
             offset += length;
           }
           if (offset < 0 || offset >= length) {
-            throw Error('get(...): index out of bounds (offset: ' + offset + ', length: ' + length + ')');
+            throw Error('get(...): index out of bounds ' + ('(offset: ' + offset + ', length: ' + length + ')'));
           }
           return this.nodes[offset];
         }
@@ -274,6 +268,43 @@
         key: 'is',
         value: function is(selector) {
           return this.get(0).matches(selector);
+        }
+
+        /**
+         * jquery compatible each()
+         *
+         * @param  {Function} func
+         * @return {Mumpitz}
+         */
+
+      }, {
+        key: 'each',
+        value: function each(func) {
+          // jQuery variant
+          var count = this.length;
+          var nodes = this.nodes;
+          for (var i = 0; i < count; ++i) {
+            func.call(nodes[i], i, nodes[i]);
+          }
+          return this;
+        }
+
+        /**
+         * standard forEach
+         *
+         * @param  {Function} func
+         * @param  {Object} context optional
+         */
+
+      }, {
+        key: 'forEach',
+        value: function forEach(func, context) {
+          var count = this.length;
+          var nodes = this.nodes;
+          var bound = context ? func.bind(context) : func;
+          for (var i = 0; i < count; ++i) {
+            bound(nodes[i], i, nodes);
+          }
         }
 
         /**
