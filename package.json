@@ -1,9 +1,10 @@
 {
   "name": "mumpitz",
   "version": "1.0.0",
-  "description": "Mumpitz Javascript library",
+  "description": "Mumpitz is a jQuery-like Element wrapper and utility",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "grunt",
+    "development": "npm run dev"
   },
   "author": "asccc",
   "license": "MIT",
