@@ -30,6 +30,9 @@ dist/mumpitz.js ES2015
 Searches for elements matching the given selector.
 A new instance of the internal Mumpitz wrapper class is returned.
 
+If an instance of Mumpitz is passed as `selector`, the passed `context` gets ignored and
+the instance gets returned as-is.
+
 ### Mumpitz.noConflict()
 
 Returns the previous value stored in $ before the Mumpitz-library was loaded.
@@ -72,6 +75,10 @@ Returns true if the first element in the collection matches the given selector.
 ### find(selector)
 
 Searches for elements using the first element in the collection as context. Equivalent to `Mumpitz(selector, this.get(0))`.
+
+### forEach(callback, context = undefined)
+
+Iterates over the collection. Note there is also a jQuery-like`each(callback)` method.
 
 ### hasClass(className)
 
